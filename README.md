@@ -24,7 +24,7 @@ build, and nowhere else.
 
 ## What a spec looks like
 
-```markdown
+````markdown
 ## Download retry (design.md §2)
 
 ```{loop} Download retry
@@ -46,7 +46,7 @@ build, and nowhere else.
 :flows_to: ACT-DL-WRITE
 :fails_to: LOOP-DL
 ```
-```
+````
 
 Thirteen block types: requirement, scenario, constraint, component,
 artifact, interface, action, decision, loop, state, transition, rule,
@@ -54,14 +54,14 @@ record. A handful of link kinds (`flows_to`, `fails_to`, `reenters`,
 `verifies`, `satisfies`, `part_of`, ...) and six fields. Views are declared
 in the same Markdown:
 
-```markdown
+````markdown
 ```{needflow} Flow
 :config: lr
 :filter: type in ["action", "decision", "loop"] and docname == "updater"
 :link_types: flows_to, fails_to, reenters
 :show_link_names:
 ```
-```
+````
 
 The full vocabulary, the conventions, modelling guidance (loops, state
 machines, traceability) and view examples are in
