@@ -31,7 +31,8 @@ Full detail here. Any Markdown. Read by clicking the box.
 - `summary` is one sentence shown on the box. Titles and summaries are what
   a reader sees without clicking. Everything else is one click away.
 - Options are `:name: value` lines directly under the title. Leave a blank
-  line before the body.
+  line before the body. A `#` preceded by a space inside a value starts a
+  comment and eats the rest; wrap such a value in double quotes.
 
 ### Types
 
