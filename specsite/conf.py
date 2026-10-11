@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from mbse_vocab import *  # noqa: F401,F403
+from mbselite_vocab import *  # noqa: F401,F403
 
 project = "my-project"
 html_title = "my-project specs"
@@ -26,6 +26,6 @@ plantuml = f'java -jar "{_jar}"' if _jar.is_file() else "plantuml"
 plantuml_output_format = "svg_img"
 
 html_static_path = ["_static"]
-html_css_files = ["mbse.css"]
-html_js_files = ["mbse.js"]
-from mbse_inline_svg import setup  # noqa: E402,F401  inline diagrams into pages
+html_css_files = ["mbselite.css"]
+html_js_files = ["mbselite.js"]
+from mbselite_inline_svg import setup  # noqa: E402,F401  inline diagrams into pages

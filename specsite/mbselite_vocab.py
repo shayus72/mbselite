@@ -1,7 +1,7 @@
 """Generic, project-independent vocabulary for lightweight MBSE on top of
 sphinx-needs. Import it from any project's conf.py:
 
-    from mbse_vocab import *
+    from mbselite_vocab import *
 
 A project never adds types here. Its own words (stage, gate, loop, ...) go in
 the `kind` field of an item, so views can filter on them without a new type.

@@ -2,7 +2,7 @@
 
 Why: an inline SVG scales with CSS and keeps its links clickable, and the
 page works from file:// as well as from a server (fetch() does not).
-Register from conf.py with:  from mbse_inline_svg import setup
+Register from conf.py with:  from mbselite_inline_svg import setup
 """
 
 import re
@@ -23,7 +23,7 @@ def _inline(html_path: Path) -> None:
         svg = re.sub(r'\sheight="[^"]*"', "", svg, count=1)
         svg = re.sub(r'\sstyle="[^"]*"', "", svg, count=1)
         svg = re.sub(r'\spreserveAspectRatio="[^"]*"', "", svg, count=1)
-        return svg.replace("<svg ", '<svg class="mbse-diagram" preserveAspectRatio="xMidYMid meet" ', 1)
+        return svg.replace("<svg ", '<svg class="mbselite-diagram" preserveAspectRatio="xMidYMid meet" ', 1)
 
     new = _IMG.sub(repl, text)
     if new != text:

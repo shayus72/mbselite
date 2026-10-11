@@ -1,4 +1,4 @@
-# mbse-kit
+# mbselite
 
 Lightweight model-based specs on sphinx-needs. Write a spec in Markdown with
 typed blocks (requirement, scenario, action, decision, loop, state, ...);
@@ -6,7 +6,7 @@ the build generates clickable diagrams, tables and a JSON export from them.
 One source, no hand-drawn pictures.
 
 - Authoring guide and conventions: `specsite/README.md`
-- Metamodel (shared, never project-specific): `specsite/mbse_vocab.py`
+- Metamodel (shared, never project-specific): `specsite/mbselite_vocab.py`
 - Example spec: `specsite/example-ota.md`
 
 ## Run

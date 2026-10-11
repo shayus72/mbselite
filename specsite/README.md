@@ -1,6 +1,6 @@
 # Lightweight MBSE on sphinx-needs
 
-Generic kit. `mbse_vocab.py` is the metamodel and is shared by every
+Generic kit. `mbselite_vocab.py` is the metamodel and is shared by every
 project. A project adds a `conf.py` of about ten lines and writes its specs
 in Markdown. Diagrams and tables are generated from the spec; nothing is
 drawn by hand. Every box links back to the block it came from.
@@ -270,7 +270,7 @@ exits lists its three transitions.
 
 ## Project setup
 
-1. Copy `specsite/` minus the spec files: `mbse_vocab.py`, `mbse_inline_svg.py`,
+1. Copy `specsite/` minus the spec files: `mbselite_vocab.py`, `mbselite_inline_svg.py`,
    `conf.py`, `index.md`, `_static/`, `README.md`. Edit `project` and
    `html_title` in `conf.py`.
 2. Copy `tools/` (portable Graphviz and `plantuml.jar`, 43 MB) next to it, or

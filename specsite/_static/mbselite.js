@@ -2,7 +2,7 @@
 // Wheel zooms around the cursor, drag pans, double-click refits,
 // Esc or the button closes. Boxes stay clickable at any zoom.
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("svg.mbse-diagram").forEach(function (src) {
+  document.querySelectorAll("svg.mbselite-diagram").forEach(function (src) {
     src.addEventListener("click", function (e) {
       if (e.target.closest("a")) return;          // a box link: let it navigate
       openViewer(src);
@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function openViewer(src) {
     var overlay = document.createElement("div");
-    overlay.className = "mbse-overlay";
+    overlay.className = "mbselite-overlay";
     overlay.innerHTML =
-      '<button class="mbse-close">Close (Esc)</button>' +
-      '<div class="mbse-hint">wheel: zoom · drag: pan · double-click: fit · click a box: open it</div>' +
-      '<div class="mbse-stage"></div>';
-    var stage = overlay.querySelector(".mbse-stage");
+      '<button class="mbselite-close">Close (Esc)</button>' +
+      '<div class="mbselite-hint">wheel: zoom · drag: pan · double-click: fit · click a box: open it</div>' +
+      '<div class="mbselite-stage"></div>';
+    var stage = overlay.querySelector(".mbselite-stage");
     var svg = src.cloneNode(true);
-    svg.classList.remove("mbse-diagram"); svg.classList.add("mbse-view");
+    svg.classList.remove("mbselite-diagram"); svg.classList.add("mbselite-view");
     svg.style.width = "100%"; svg.style.height = "100%";
     stage.appendChild(svg);
     document.body.appendChild(overlay);
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function remove() { overlay.remove(); document.removeEventListener("keydown", onKey); }
     function onKey(e) { if (e.key === "Escape") remove(); }
-    overlay.querySelector(".mbse-close").addEventListener("click", remove);
+    overlay.querySelector(".mbselite-close").addEventListener("click", remove);
     document.addEventListener("keydown", onKey);
   }
 });
