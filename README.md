@@ -22,49 +22,24 @@ detail, the generated views are for whoever needs the shape. A number
 changed in the document changes in every diagram and table on the next
 build, and nowhere else.
 
-## What a spec looks like
+## Conventions it follows
 
-````markdown
-## Download retry (design.md §2)
+- **sphinx-needs**, unchanged. A block is a MyST fenced directive with an
+  `:id:`, options and a body. mbselite only supplies the configuration
+  sphinx-needs needs anyway: thirteen block types (requirement, scenario,
+  constraint, component, artifact, interface, action, decision, loop,
+  state, transition, rule, record), the link kinds (`flows_to`, `fails_to`,
+  `reenters`, `verifies`, `satisfies`, `part_of`, ...) and six fields.
+- **OpenSpec** for requirement and scenario text: SHALL statements, WHEN /
+  THEN scenarios, source citations. The text is kept verbatim; mbselite
+  wraps it in a typed block so it gets an ID and links. Note that this
+  wrapper is not what the `openspec` CLI validator expects, so a converted
+  spec is an mbselite spec, not an OpenSpec one.
+- **SysML v2** for the vocabulary: the block types are a small subset of its
+  element kinds, and diagrams are views of the model, never the model.
 
-```{loop} Download retry
-:id: LOOP-DL
-:source: design.md §2
-:summary: Up to 3 attempts; progress is verified chunks; then give up.
-:limit: 3 attempts
-:measure: verified chunks
-:reenters: ACT-DL-FETCH
-:fails_to: ACT-DL-ABANDON
-```
-
-```{decision} Image valid?
-:id: DEC-DL-VALID
-:kind: check
-:part_of: LOOP-DL
-:source: design.md §2
-:summary: Checksum and signature match. Fail: try again.
-:flows_to: ACT-DL-WRITE
-:fails_to: LOOP-DL
-```
-````
-
-Thirteen block types: requirement, scenario, constraint, component,
-artifact, interface, action, decision, loop, state, transition, rule,
-record. A handful of link kinds (`flows_to`, `fails_to`, `reenters`,
-`verifies`, `satisfies`, `part_of`, ...) and six fields. Views are declared
-in the same Markdown:
-
-````markdown
-```{needflow} Flow
-:config: lr
-:filter: type in ["action", "decision", "loop"] and docname == "updater"
-:link_types: flows_to, fails_to, reenters
-:show_link_names:
-```
-````
-
-The full vocabulary, the conventions, modelling guidance (loops, state
-machines, traceability) and view examples are in
+The vocabulary, the conventions, modelling guidance (loops, state machines,
+traceability) and view examples are in
 [`mbselite/GUIDE.md`](mbselite/GUIDE.md). `specs/example-ota.md` is a
 complete spec of a firmware updater written from that guide alone.
 
