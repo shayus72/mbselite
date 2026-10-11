@@ -285,7 +285,7 @@ Layout of the repo:
 2. Set `project` and `html_title` in `specs/conf.py`. Delete
    `specs/example-ota.md` once you have your own specs.
 3. Install the renderers: Java plus Graphviz and PlantUML on `PATH`, or
-   drop portable copies into `tools/` (see `tools/README.md`).
+   drop portable copies into `tools/` (see Install).
 4. Run `python build.py`. First run creates `.venv` and installs
    `requirements.txt`. A clean build prints no warnings.
 5. List each spec file in the `toctree` of `specs/index.md`.
