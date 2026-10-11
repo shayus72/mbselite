@@ -13,6 +13,49 @@ shows what each thing does, a click-to-zoom viewer with dark mode, and an
 authoring guide written so that both people and AI assistants can write
 specs with it.
 
+## Where it sits
+
+mbselite is the last step of a spec-driven workflow, not a replacement for
+it:
+
+1. A person and an AI assistant brainstorm a change.
+2. [OpenSpec](https://github.com/Fission-AI/OpenSpec) turns that into a
+   proposal, a design and a spec with requirements and WHEN/THEN scenarios.
+   The [Superpowers](https://github.com/obra/superpowers) skills for Claude
+   Code drive the brainstorming, planning and test-first implementation
+   around it.
+3. mbselite renders the spec: the AI writes or converts the spec into typed
+   blocks following `mbselite/GUIDE.md`, the build generates the diagrams
+   and tables a person reads, and every box links back to the text.
+
+Steps 1 and 2 are optional. Any Markdown spec with requirements and
+behaviour can be written in mbselite form directly. But that is the
+workflow this was built in, and the guide assumes specs that look like
+OpenSpec output.
+
+## Requirements
+
+Build:
+
+| What | Tested with | Notes |
+|---|---|---|
+| Python | 3.13 | 3.10 or newer |
+| Java | 1.8 | any JRE 8+ |
+| Graphviz | 12.2.1 | `dot` on PATH or in `tools/graphviz/bin/` |
+| PlantUML | 1.2025.4 | `plantuml` on PATH or `tools/plantuml.jar` |
+| Python packages | see `requirements.txt` | sphinx 9.1, sphinx-needs 8.5, myst-parser 5.1, furo, sphinxcontrib-plantuml, pillow; installed by `build.py` |
+
+Authoring, if an AI writes the specs: any assistant that can read
+`mbselite/GUIDE.md` and write files. It was developed with Claude Code.
+Give the assistant the guide, the metamodel `mbselite/__init__.py` and
+the source document; nothing else is needed. Three blind trials, each
+with a fresh assistant and only those files, produced specs that built
+clean on the first try.
+
+Verification, optional: have a second assistant that has not seen the
+source read only the built site and describe the system back; compare
+with the source. That is how the conventions in the guide were tuned.
+
 ## Why
 
 Specifications written as prose are easy to write and hard to overview.

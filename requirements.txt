@@ -1,6 +1,7 @@
-sphinx>=9
-sphinx-needs>=8.5
-myst-parser>=5
-sphinxcontrib-plantuml
-furo
-pillow
+# Versions this kit was built and tested with (Oct 2026). Newer should work.
+sphinx>=9.1,<10
+sphinx-needs>=8.5,<9
+myst-parser>=5.1,<6
+sphinxcontrib-plantuml>=0.31
+furo>=2025.12
+pillow>=12
