@@ -1,4 +1,5 @@
 .venv/
-specsite/_build/
-tools/
+specs/_build/
+tools/*
+!tools/README.md
 __pycache__/

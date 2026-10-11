@@ -5,9 +5,9 @@ typed blocks (requirement, scenario, action, decision, loop, state, ...);
 the build generates clickable diagrams, tables and a JSON export from them.
 One source, no hand-drawn pictures.
 
-- Authoring guide and conventions: `specsite/README.md`
-- Metamodel (shared, never project-specific): `specsite/mbselite_vocab.py`
-- Example spec: `specsite/example-ota.md`
+- Authoring guide and conventions: `mbselite/GUIDE.md`
+- Metamodel (shared, never project-specific): `mbselite/__init__.py`
+- Example spec: `specs/example-ota.md`
 
 ## Run
 
@@ -16,8 +16,15 @@ Needs Python 3.10+, Java, Graphviz and PlantUML (see `tools/README.md`).
     python build.py          # creates .venv on first run, builds, opens the site
     ./build.sh | build.cmd   # same, per platform
 
+## Layout
+
+    mbselite/   the tool: metamodel, build hook, viewer, authoring guide
+    specs/      your spec files, conf.py, index.md
+    tools/      optional portable Graphviz and plantuml.jar (git-ignored)
+
 ## Use in a project
 
-Copy this folder into the project (or add it as a submodule), set `project`
-and `html_title` in `specsite/conf.py`, delete `example-ota.md`, write
-specs, list them in `specsite/index.md`.
+Clone, or copy `mbselite/`, `specs/conf.py`, `specs/index.md`,
+`requirements.txt` and `build.py` into the project. Set `project` and
+`html_title` in `specs/conf.py`, delete `example-ota.md`, write specs, list
+them in `specs/index.md`. Full guide: `mbselite/GUIDE.md`.

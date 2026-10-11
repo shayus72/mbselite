@@ -17,8 +17,8 @@ if not PY.exists():
     venv.create(VENV, with_pip=True)
     subprocess.check_call([str(PY), "-m", "pip", "install", "-q", "-r", str(ROOT / "requirements.txt")])
 
-out = ROOT / "specsite" / "_build" / "html"
-rc = subprocess.call([str(PY), "-m", "sphinx", "-b", "html", str(ROOT / "specsite"), str(out)]
+out = ROOT / "specs" / "_build" / "html"
+rc = subprocess.call([str(PY), "-m", "sphinx", "-b", "html", str(ROOT / "specs"), str(out)]
                      + [a for a in sys.argv[1:] if a != "--no-open"])
 if rc == 0 and "--no-open" not in sys.argv:
     webbrowser.open((out / "index.html").as_uri())

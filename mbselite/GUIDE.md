@@ -1,9 +1,12 @@
 # Lightweight MBSE on sphinx-needs
 
-Generic kit. `mbselite_vocab.py` is the metamodel and is shared by every
+Generic kit. `mbselite/__init__.py` is the metamodel and is shared by every
 project. A project adds a `conf.py` of about ten lines and writes its specs
 in Markdown. Diagrams and tables are generated from the spec; nothing is
 drawn by hand. Every box links back to the block it came from.
+
+Layout: `mbselite/` is the tool (never edited per project), `specs/` holds
+the project's spec files, `conf.py` and `index.md`.
 
 ## Writing a spec
 
@@ -270,12 +273,19 @@ exits lists its three transitions.
 
 ## Project setup
 
-1. Copy `specsite/` minus the spec files: `mbselite_vocab.py`, `mbselite_inline_svg.py`,
-   `conf.py`, `index.md`, `_static/`, `README.md`. Edit `project` and
-   `html_title` in `conf.py`.
-2. Copy `tools/` (portable Graphviz and `plantuml.jar`, 43 MB) next to it, or
-   have `dot` and `plantuml` on `PATH`. Java is required either way.
-3. Copy `requirements.txt` and `build.cmd`. Run `build.cmd`: it creates
-   `.venv` on first use, builds, and opens the site. A clean build prints
-   no warnings.
-4. List each spec file in the `toctree` of `index.md`.
+Layout of the repo:
+
+    mbselite/      the tool: metamodel, build hook, viewer, this guide. Never edited per project.
+    specs/         the project's spec files, plus conf.py and index.md
+    tools/         optional portable Graphviz and plantuml.jar (git-ignored)
+    build.py       cross-platform build; build.sh / build.cmd wrap it
+
+1. Clone the repo, or copy `mbselite/`, `specs/conf.py`, `specs/index.md`,
+   `requirements.txt` and the build scripts into an existing project.
+2. Set `project` and `html_title` in `specs/conf.py`. Delete
+   `specs/example-ota.md` once you have your own specs.
+3. Install the renderers: Java plus Graphviz and PlantUML on `PATH`, or
+   drop portable copies into `tools/` (see `tools/README.md`).
+4. Run `python build.py`. First run creates `.venv` and installs
+   `requirements.txt`. A clean build prints no warnings.
+5. List each spec file in the `toctree` of `specs/index.md`.
