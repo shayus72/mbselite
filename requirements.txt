@@ -1,0 +1,6 @@
+sphinx>=9
+sphinx-needs>=8.5
+myst-parser>=5
+sphinxcontrib-plantuml
+furo
+pillow

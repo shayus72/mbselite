@@ -1,0 +1,4 @@
+.venv/
+specsite/_build/
+tools/
+__pycache__/
