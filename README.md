@@ -134,6 +134,16 @@ prints no warnings.
     specs/      your spec files, conf.py, index.md
     build.py    cross-platform build script
 
+## As a Claude Code skill
+
+    npx skills add shayus72/mbselite
+
+installs the `mbselite` skill next to the
+[spec-driven-tdd](https://github.com/strelov1/spec-driven-tdd) pack. Invoke
+it after a spec is written or changed; it bootstraps the kit into the
+project if needed, follows the guide, builds and checks. The skill is
+`skills/mbselite/SKILL.md` and contains no code of its own.
+
 ## Use in your own project
 
 1. Clone, or copy `mbselite/`, `specs/conf.py`, `specs/index.md`,
