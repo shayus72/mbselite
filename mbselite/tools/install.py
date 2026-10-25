@@ -107,6 +107,7 @@ def main() -> int:
 
     # 2. project files (only when missing)
     specs = proj / "specs"
+    has_os = (proj / "openspec").is_dir()
     conf = specs / "conf.py"
     if not conf.exists():
         say("create specs/conf.py")
@@ -119,7 +120,6 @@ def main() -> int:
     if not index.exists():
         say("create specs/index.md")
         if do:
-            has_os = (proj / "openspec").is_dir()
             index.write_text(INDEX_TEMPLATE.format(openspec_note=OPENSPEC_NOTE if has_os else "",
                                                    entries="\ngenerated-index" if has_os else ""), encoding="utf-8")
 
@@ -142,8 +142,14 @@ def main() -> int:
         if log:
             print("note: a running Claude Code session picks up new hooks after /hooks or a restart")
 
+    # Existing project files are never rewritten; say what they still need.
+    if conf.exists() and "*.model.md" not in conf.read_text(encoding="utf-8"):
+        print('todo: add "**/*.model.md" to exclude_patterns in specs/conf.py (model fragments are included, not built)')
+    if has_os and index.exists() and "generated-index" not in index.read_text(encoding="utf-8"):
+        print("todo: list generated-index in the toctree of specs/index.md (the OpenSpec pages hang off it)")
+
     print("next (from the project root, Python 3.11+): "
-          + ("python3 mbselite/tools/openspec2mbselite.py && " if (proj / "openspec").is_dir() else "")
+          + ("python3 mbselite/tools/openspec2mbselite.py && " if has_os else "")
           + "python3 build.py --no-open")
     return 0
 

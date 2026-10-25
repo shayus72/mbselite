@@ -453,6 +453,9 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
     root = a.root.resolve()
+    if not (root / "openspec").is_dir():
+        print(f"openspec2mbselite: no openspec/ in {root}; nothing to generate")
+        return 0
     out_dir = (a.out or root / "specs").resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 

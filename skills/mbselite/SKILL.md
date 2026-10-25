@@ -15,13 +15,14 @@ If the project has no `mbselite/` folder (or to update an older copy), run
 the kit's installer from the project root:
 
 ```
-git clone --depth 1 https://github.com/shayus72/mbselite.git /tmp/mbselite
+rm -rf /tmp/mbselite && git clone --depth 1 https://github.com/shayus72/mbselite.git /tmp/mbselite
 python3 /tmp/mbselite/mbselite/tools/install.py .            # add --kicad for a KiCad hardware project
 ```
 
 It copies `mbselite/` (with `mbselite/tools/`), `build.py`, `build.sh`,
 `build.cmd` and `requirements.txt`; creates `specs/conf.py` and
-`specs/index.md` only if missing; and merges the hooks into
+`specs/index.md` only if missing (do what any `todo:` line it prints says
+about existing ones); and merges the hooks into
 `.claude/settings.json` without touching other settings or hooks:
 
 - PostToolUse (Edit|Write|MultiEdit|Bash): `mbselite/tools/on-spec-change.sh`

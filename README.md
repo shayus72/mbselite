@@ -157,7 +157,7 @@ project if needed, follows the guide, builds and checks. The skill is
 
 1. From the project root:
 
-       git clone --depth 1 https://github.com/shayus72/mbselite.git /tmp/mbselite
+       rm -rf /tmp/mbselite && git clone --depth 1 https://github.com/shayus72/mbselite.git /tmp/mbselite
        python3 /tmp/mbselite/mbselite/tools/install.py .     # --kicad for hardware projects
 
    This copies `mbselite/`, `build.py`, `build.sh`, `build.cmd` and
@@ -165,7 +165,10 @@ project if needed, follows the guide, builds and checks. The skill is
    `specs/index.md` if they are missing, and merges the Claude Code hooks
    (below) into `.claude/settings.json`, keeping every other setting and
    hook. Re-running it updates the kit; `--no-hooks` skips the settings,
-   `--dry-run` only lists what it would do. If the project's `.gitignore`
+   `--dry-run` only lists what it would do. It never edits an existing
+   `specs/conf.py` or `specs/index.md`; a `todo:` line says what they still
+   need (`"**/*.model.md"` in `exclude_patterns`, `generated-index` in the
+   toctree of an OpenSpec project). If the project's `.gitignore`
    ignores `tools/` (for `plantuml.jar`), write it as `/tools/`, or
    `mbselite/tools/` will not be committed.
 2. Check `project` and `html_title` in `specs/conf.py`.
