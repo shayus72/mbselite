@@ -39,10 +39,10 @@ Build:
 
 | What | Tested with | Notes |
 |---|---|---|
-| Python | 3.13 | 3.10 or newer |
+| Python | 3.12, 3.13 | 3.11 or newer (sphinx ≥ 9.1 requires it); `build.py` stops with a one-line message on older |
 | Java | 1.8 | any JRE 8+ |
 | Graphviz | 12.2.1 | `dot` on PATH or in `tools/graphviz/bin/` |
-| PlantUML | 1.2025.4 | `plantuml` on PATH or `tools/plantuml.jar` |
+| PlantUML | 1.2025.4 | `plantuml` on PATH, or `plantuml.jar` in `tools/` at the project root (next to `build.py`) |
 | Python packages | see `requirements.txt` | sphinx 9.1, sphinx-needs 8.5, myst-parser 5.1, furo, sphinxcontrib-plantuml, pillow; installed by `build.py` |
 
 Authoring, if an AI writes the specs: any assistant that can read
@@ -103,7 +103,9 @@ complete spec of a firmware updater written from that guide alone.
 
 ## Install
 
-Python 3.10 or newer, Java, Graphviz and PlantUML.
+Python 3.11 or newer, Java, Graphviz and PlantUML. Where `python3` is older
+(Ubuntu 22.04 ships 3.10), run `python3.12 build.py` instead; the `.venv` is
+created by whichever interpreter runs `build.py` first.
 
 Linux (Debian/Ubuntu):
 
@@ -126,13 +128,20 @@ Then:
     python build.py        # creates .venv, installs, builds, opens the site
 
 `./build.sh` and `build.cmd` do the same on their platform. A clean build
-prints no warnings.
+prints no warnings. The build always runs from the project root (`build.py`
+next to `specs/`); there is no `specs/build.py`.
+
+Sphinx rebuilds only pages whose sources changed and never deletes output.
+`build.py` adds `-a -E` by itself when a file in `mbselite/` is newer than the
+last build. After deleting or renaming a spec, remove `specs/_build/` (or at
+least the stale `.html`) so the old page does not linger.
 
 ## Layout
 
-    mbselite/   the tool: metamodel (__init__.py), build hook, viewer, GUIDE.md
-    specs/      your spec files, conf.py, index.md
-    build.py    cross-platform build script
+    mbselite/         the tool: metamodel (__init__.py), build hook, viewer, GUIDE.md
+    mbselite/tools/   install.py, OpenSpec converter, Claude Code hooks, KiCad scaffolder
+    specs/            your spec files, conf.py, index.md
+    build.py          cross-platform build script
 
 ## As a Claude Code skill
 
@@ -146,13 +155,100 @@ project if needed, follows the guide, builds and checks. The skill is
 
 ## Use in your own project
 
-1. Clone, or copy `mbselite/`, `specs/conf.py`, `specs/index.md`,
-   `requirements.txt` and `build.py` into the project.
-2. Set `project` and `html_title` in `specs/conf.py`.
-3. Write specs in `specs/`, list them in `specs/index.md`, delete the
-   example.
+1. From the project root:
+
+       git clone --depth 1 https://github.com/shayus72/mbselite.git /tmp/mbselite
+       python3 /tmp/mbselite/mbselite/tools/install.py .     # --kicad for hardware projects
+
+   This copies `mbselite/`, `build.py`, `build.sh`, `build.cmd` and
+   `requirements.txt` (refreshing older copies), creates `specs/conf.py` and
+   `specs/index.md` if they are missing, and merges the Claude Code hooks
+   (below) into `.claude/settings.json`, keeping every other setting and
+   hook. Re-running it updates the kit; `--no-hooks` skips the settings,
+   `--dry-run` only lists what it would do. If the project's `.gitignore`
+   ignores `tools/` (for `plantuml.jar`), write it as `/tools/`, or
+   `mbselite/tools/` will not be committed.
+2. Check `project` and `html_title` in `specs/conf.py`.
+3. Write specs in `specs/` and list them in `specs/index.md`, or, in an
+   OpenSpec project, let the converter generate them (next section).
 4. Give `mbselite/GUIDE.md` to whoever writes specs, human or AI. It is
    self-contained.
+
+## OpenSpec projects
+
+`mbselite/tools/openspec2mbselite.py` (stdlib only) makes the rendered pages
+a generated twin of the OpenSpec specs, so there is one source. Expected
+layout, relative to the project root:
+
+    openspec/changes/<change>/specs/<capability-path>/spec.md   active changes (archive/ skipped)
+    openspec/changes/<change>/.openspec.yaml                     optional x-mbselite_id_prefix
+    openspec/specs/<capability-path>/spec.md                     synced main specs (change "main")
+    specs/index.md                                               lists `generated-index` once
+
+It writes one page per capability at `specs/<change>/<capability-path>.md`,
+an index per change and `specs/generated-index.md`. Each `### Requirement:`
+becomes a `requirement` block and each `#### Scenario:` a `scenario` block
+that `verifies` it, text verbatim; IDs are `REQ-<CAP>-<TITLE>` and
+`SC-<CAP>-<TITLE>-<n>` from the headings. A `Source: …` / `**Source:** …` line
+sets `:source:`, `ASSUMED` sets `:kind: assumed`, REMOVED / RENAMED
+requirements are skipped. Every capability gets a default `component` that is
+`part_of` its parent path, so a nested tree renders as a hierarchy.
+Generated pages carry a marker line and are never edited; hand-written model
+blocks go in `<page>.model.md` next to the page (or `index.model.md` for a
+change), which the page includes instead of the default component.
+`specs/conf.py` excludes `**/*.model.md` so fragments are not built twice.
+`--check` exits 1 when a page is out of date (CI, pre-commit).
+
+**Clashing capability names.** Two changes with a capability of the same
+last path segment (`hardware/board` and `firmware/board`), or a change that
+modifies a capability of another change or of the main specs, generate the
+same IDs; the converter lists them and exits 1. Give one change a prefix in
+its `.openspec.yaml` (OpenSpec ignores `x-` keys):
+
+    x-mbselite_id_prefix: FN
+
+and its IDs become `REQ-FN-BOARD-…`, `SC-FN-…`, `COMP-FN-…`.
+
+**Claude Code hooks** (installed by `install.py`, commands relative to
+`$CLAUDE_PROJECT_DIR`):
+
+- PostToolUse `Edit|Write|MultiEdit|Bash` → `mbselite/tools/on-spec-change.sh`.
+  After a `*.md` under `openspec/` or `specs/` is written (or, for Bash, when
+  one is newer than the last build) it runs the converter and
+  `build.py --no-open -q`; warnings come back to the session (exit 2). It
+  uses `$MBSELITE_PYTHON` or the first `python3.x` ≥ 3.11 on PATH.
+- SessionStart → `mbselite/tools/session-hint.sh` (`--kicad` only, below).
+
+A settings file changed mid-session takes effect after `/hooks` or a
+restart. The hooks are bash scripts (Linux, macOS, Git Bash on Windows).
+
+## Hardware projects (KiCad)
+
+    python3 mbselite/tools/kicad_sheets2spec.py ROOT.kicad_sch --change NAME \
+        [--domain hardware] [--pcb-json pcb.json] [--slug-map specs/sheet-slugs.json] [--dry-run]
+
+walks the sheet hierarchy and, for every sheet with components of its own,
+writes (never overwriting) an OpenSpec delta spec
+`openspec/changes/NAME/specs/<domain>/sheets/<slug>/…/spec.md` and a model
+fragment with the sheet's component, nested like the schematic, plus
+`<domain>/board` for the root sheet. Sheets holding only sub-sheets are
+treated as containers. Slugs default to the kebab-case sheet-file stem; the
+slug map (JSON `{"<file stem or sheet name>": "<slug>"}` or `a=b,c=d`) picks
+better names. A `pcb.json` from kicad-happy adds footprint counts and
+positions to the Purpose. The scaffolded requirement is a placeholder
+marked ASSUMED; replace it. The change must exist
+first (`/opsx:propose`). `install.py --kicad` adds the SessionStart hint that
+reports sheets against capabilities. To make `/opsx:propose` follow the
+one-capability-per-sheet convention, state it as a rule in
+`openspec/config.yaml`, for example:
+
+    rules:
+      proposal:
+        - One capability per functional KiCad sheet under <domain>/sheets/<slug>,
+          nested like the schematic, plus <domain>/board for the root sheet.
+      specs:
+        - Scaffold with mbselite/tools/kicad_sheets2spec.py, then replace the
+          placeholder requirement. Every requirement ends with a **Source:** line.
 
 Never add project-specific types to `mbselite/`. A project's own words
 (stage, gate, step, ...) go in the `kind` field of a block, and views
